@@ -11,7 +11,7 @@ const app = express();
 app.use(express.json({ limit: '1mb' })); 
 app.use(express.static(__dirname)); 
 const apiKey = process.env.GROQ_API_KEY;
-const model = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
+const model = process.env.GROQ_MODEL || 'openai/gpt-oss-20b';
 const ai = apiKey ? new Groq({ apiKey }) : null;
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
