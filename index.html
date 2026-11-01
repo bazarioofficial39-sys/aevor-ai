@@ -1,0 +1,125 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#101114">
+  <title>AEVOR AI — Your Personal Assistant</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div id="logo"class="brand-mark"><img src="logo.jpg"></div>
+        <div>
+          <strong>AEVOR AI</strong>
+          <small>Your AI assistant</small>
+        </div>
+      </div>
+
+      <button class="new-chat" id="newChat">
+        <span>＋</span> New chat
+      </button>
+
+      <div class="side-label">YOUR SPACE</div>
+      <div class="history" id="history">
+        <div class="history-empty">Your recent chats will appear here.</div>
+      </div>
+
+      <div class="sidebar-bottom">
+        <div class="avatar">A</div>
+        <div>
+          <strong>Ali</strong>
+          <small>Founder</small>
+        </div>
+        <span class="online-dot"></span>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
+        <div class="mobile-brand">✦ AEVOR AI</div>
+        <div class="model-pill">
+          <span class="status-dot"></span>
+          AI Assistant
+          <span class="chevron">⌄</span>
+        </div>
+        <button class="clear-btn" id="clearBtn" title="Clear current chat">
+          Clear chat
+        </button>
+      </header>
+
+      <section class="chat-area" id="chatArea">
+        <div class="welcome" id="welcome">
+          <div class="sparkle">✦</div>
+          <p class="eyebrow">YOUR PERSONAL AI</p>
+          <h1>What can I help you<br>
+            <span>figure out today?</span>
+          </h1>
+          <p class="welcome-copy">
+            Ask anything, learn something new, or work through an idea.
+          </p>
+
+          <div class="suggestions">
+            <button class="suggestion"
+              data-prompt="Teach me JavaScript from the beginning in Roman Urdu.">
+              <span>⌘</span>
+              <b>Learn coding</b>
+              <small>Start with JavaScript basics</small>
+            </button>
+
+            <button class="suggestion"
+              data-prompt="Help me make a realistic study plan for this week.">
+              <span>◷</span>
+              <b>Plan my week</b>
+              <small>Make a simple study routine</small>
+            </button>
+
+            <button class="suggestion"
+              data-prompt="Explain a difficult topic in simple Roman Urdu.">
+              <span>✧</span>
+              <b>Understand a topic</b>
+              <small>Break it down step by step</small>
+            </button>
+
+            <button class="suggestion"
+              data-prompt="Give me three creative ideas for a website project.">
+              <span>⌘</span>
+              <b>Build something</b>
+              <small>Brainstorm a project idea</small>
+            </button>
+          </div>
+        </div>
+
+        <div class="messages" id="messages" aria-live="polite"></div>
+      </section>
+
+      <footer class="composer-wrap">
+        <form class="composer" id="chatForm">
+          <textarea id="prompt" rows="1"
+            placeholder="Message AEVOR AI..."
+            aria-label="Message AEVOR AI"></textarea>
+
+          <div class="composer-tools">
+            <span class="hint">
+              AI can make mistakes. Check important information.
+            </span>
+            <button class="send-btn" id="sendBtn" type="submit"
+              aria-label="Send message">↑</button>
+          </div>
+        </form>
+
+        <p class="footer-note">
+          Made for Ali · Keep your API key private
+        </p>
+      </footer>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status"></div>
+  <script src="/app.js"></script>
+</body>
+</html>
