@@ -80,7 +80,7 @@ Give accurate, helpful and practical answers.
 Explain technical topics step by step when needed.
 Be honest about uncertainty and never invent facts.
 `;
-;
+
 app.post('/api/chat', async (req, res) => {
   if (!ai) {
     return res.status(503).json({
