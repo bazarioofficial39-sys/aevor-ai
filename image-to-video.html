@@ -202,6 +202,7 @@
     const imageUpload = document.getElementById("imageUpload");
     const preview = document.getElementById("preview");
     const generateBtn = document.getElementById("generateBtn");
+    console.log("AEVOR AI script loaded");
 
     let previousImageURL = null;
     let uploadedFilePath = null;
@@ -236,6 +237,7 @@
     });
 
     generateBtn.addEventListener("click", async function () {
+        console.log("Generate button clicked");
         const file = imageUpload.files[0];
 
         if (!file) {
