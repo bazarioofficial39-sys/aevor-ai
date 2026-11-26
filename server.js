@@ -2,15 +2,30 @@
 import 'dotenv/config';
 import express from 'express';
 import Groq from 'groq-sdk';
+import multer from 'multer';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
+const upload = multer({
+    storage: multer.memoryStorage(),
+    limits: {
+        fileSize: 10 * 1024 * 1024
+    },
+    fileFilter: (req, file, cb) => {
+        const allowedTypes = ['image/jpeg', 'image/png'];
 
-app.use(express.json({ limit: '1mb' }));
-app.use(express.static(path.join(__dirname, 'public')));
+        if (allowedTypes.includes(file.mimetype)) {
+            cb(null, true);
+        } else {
+            cb(new Error('Only JPG and PNG images are allowed.'));
+        }
+    }
+});
 
+app.use(express.json({ limit: '1mb' })); 
+app.use(express.static(__dirname)); 
 const apiKey = process.env.GROQ_API_KEY;
 const model = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
 const ai = apiKey ? new Groq({ apiKey }) : null;
@@ -44,23 +59,129 @@ async function generateWithRetry(options) {
   throw new Error('Groq request failed after retries.');
 }
 
-const systemInstruction =
-  'You are AEVOR AI, a helpful, friendly personal AI assistant. ' +
-  'Your creator and owner is Syed Ali Adnan. ' +
-  'You are an independent personal AI project. ' +
-  'If someone asks who created you, say: "You were created by Syed Ali Adnan." ' +
-  'If someone asks who owns you, say: "Your owner is Syed Ali Adnan." ' +
-  'If someone asks your name, say: "My name is AEVOR AI." ' +
 
-  'LANGUAGE RULES: ' +
-  'Reply in the same language and writing style as the latest user message. ' +
-  'For English, reply in English. For Roman Urdu, use Roman Urdu with English letters. ' +
-  'For Urdu script, reply in Urdu script. If languages are mixed, use the dominant language. ' +
-  'Never switch languages unless requested. Keep language natural and easy to understand. ' +
+const systemInstruction = `
+You are AEVOR AI, a helpful, friendly personal AI assistant.
 
-  'Give accurate, helpful, practical answers. Explain technical topics step by step when needed. ' +
-  'Be honest about uncertainty and never invent facts. ' +
-  'You are AEVOR AI, not ChatGPT or OpenAI.';
+FOUNDER AND CREATOR:
+Your founder and creator is Syed Ali Adnan, also known as Ali.
+He was born in 2009.
+He is the founder and CEO of AEVOR AI.
+AEVOR AI is his personal AI assistant project.
+The project focuses on AI assistance, learning, coding, technology and exploring ideas.
+
+If someone asks who created you, identify Syed Ali Adnan.
+If someone asks who your founder or CEO is, identify Syed Ali Adnan.
+Never invent additional personal details about your founder.
+
+DEVELOPMENT:
+Development started on 17 October 2026.
+If asked when development started, answer:
+"AEVOR AI development started on 17 October 2026."
+
+IDENTITY:
+Your name is AEVOR AI.
+You are an independent personal AI project.
+Never claim to be ChatGPT, OpenAI or Google.
+
+LANGUAGE RULES:
+1. If the user writes in English, reply completely in English.
+2. If the user writes in Urdu script, reply completely in Urdu script.
+3. If the user writes in Roman Urdu, reply in Roman Urdu using English letters.
+4. If the user mixes languages, follow the dominant language.
+5. Do not change the writing script unless requested.
+6. Follow the same language rules when discussing the founder.
+
+Give accurate, helpful and practical answers.
+Explain technical topics step by step when needed.
+Be honest about uncertainty and never invent facts.
+`;
+
+app.post('/api/upload-image', upload.single('image'), async (req, res) => {
+    try {
+        const magicKey = process.env.MAGIC_HOUR_API_KEY;
+
+        if (!magicKey) {
+            return res.status(503).json({
+                error: 'Magic Hour API key is missing.'
+            });
+        }
+
+        if (!req.file) {
+            return res.status(400).json({
+                error: 'Please select an image.'
+            });
+        }
+
+        const extension = path.extname(req.file.originalname)
+            .slice(1)
+            .toLowerCase();
+
+        // Step 1: Get upload URL
+        const urlResponse = await fetch(
+            'https://api.magichour.ai/v1/files/upload-urls',
+            {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${magicKey}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    items: [{
+                        type: 'image',
+                        extension
+                    }]
+                })
+            }
+        );
+
+        const urlData = await urlResponse.json();
+
+        if (!urlResponse.ok) {
+            console.error('Magic Hour URL error:', urlData);
+            return res.status(urlResponse.status).json({
+                error: 'Could not get image upload URL.'
+            });
+        }
+
+        const asset = urlData.items?.[0];
+
+        if (!asset?.upload_url || !asset?.file_path) {
+            return res.status(502).json({
+                error: 'Invalid upload URL response.'
+            });
+        }
+
+        // Step 2: Upload image
+        const imageResponse = await fetch(asset.upload_url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': req.file.mimetype
+            },
+            body: req.file.buffer
+        });
+
+        if (!imageResponse.ok) {
+            return res.status(502).json({
+                error: 'Image upload failed.'
+            });
+        }
+
+        // Step 3: Return uploaded file path
+        return res.json({
+            success: true,
+            filePath: asset.file_path,
+            message: 'Image uploaded successfully.'
+        });
+
+    } catch (error) {
+        console.error('Image upload error:', error.message);
+
+        return res.status(500).json({
+            error: 'Image upload failed. Please try again.'
+        });
+    }
+});
 
 app.post('/api/chat', async (req, res) => {
   if (!ai) {
