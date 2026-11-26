@@ -97,6 +97,92 @@ Explain technical topics step by step when needed.
 Be honest about uncertainty and never invent facts.
 `;
 
+app.post('/api/upload-image', upload.single('image'), async (req, res) => {
+    try {
+        const magicKey = process.env.MAGIC_HOUR_API_KEY;
+
+        if (!magicKey) {
+            return res.status(503).json({
+                error: 'Magic Hour API key is missing.'
+            });
+        }
+
+        if (!req.file) {
+            return res.status(400).json({
+                error: 'Please select an image.'
+            });
+        }
+
+        const extension = path.extname(req.file.originalname)
+            .slice(1)
+            .toLowerCase();
+
+        // Step 1: Get upload URL
+        const urlResponse = await fetch(
+            'https://api.magichour.ai/v1/files/upload-urls',
+            {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${magicKey}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    items: [{
+                        type: 'image',
+                        extension
+                    }]
+                })
+            }
+        );
+
+        const urlData = await urlResponse.json();
+
+        if (!urlResponse.ok) {
+            console.error('Magic Hour URL error:', urlData);
+            return res.status(urlResponse.status).json({
+                error: 'Could not get image upload URL.'
+            });
+        }
+
+        const asset = urlData.items?.[0];
+
+        if (!asset?.upload_url || !asset?.file_path) {
+            return res.status(502).json({
+                error: 'Invalid upload URL response.'
+            });
+        }
+
+        // Step 2: Upload image
+        const imageResponse = await fetch(asset.upload_url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': req.file.mimetype
+            },
+            body: req.file.buffer
+        });
+
+        if (!imageResponse.ok) {
+            return res.status(502).json({
+                error: 'Image upload failed.'
+            });
+        }
+
+        // Step 3: Return uploaded file path
+        return res.json({
+            success: true,
+            filePath: asset.file_path,
+            message: 'Image uploaded successfully.'
+        });
+
+    } catch (error) {
+        console.error('Image upload error:', error.message);
+
+        return res.status(500).json({
+            error: 'Image upload failed. Please try again.'
+        });
+    }
+});
+
 app.post('/api/chat', async (req, res) => {
   if (!ai) {
     return res.status(503).json({
