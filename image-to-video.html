@@ -1,1 +1,137 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image to Video | AEVOR AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #101114;
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 50px auto;
+            text-align: center;
+            background: #191a1f;
+            padding: 35px;
+            border-radius: 15px;
+            border: 1px solid #333;
+        }
+
+        h1 {
+            color: gold;
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: #aaa;
+            margin-bottom: 25px;
+        }
+
+        .upload-box {
+            border: 2px dashed #8c7835;
+            padding: 40px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .upload-box:hover {
+            background: #25241e;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        #preview {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            background: #101114;
+            color: white;
+            border: 1px solid #444;
+            border-radius: 8px;
+            resize: vertical;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background: gold;
+            color: black;
+            border: none;
+            padding: 13px 25px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Image to Video</h1>
+
+        <p>Turn your images into AI-generated videos.</p>
+
+        <label for="imageUpload" class="upload-box">
+            <h3>＋ Upload Image</h3>
+            <p>Select a JPG or PNG image</p>
+            <img id="preview" alt="Selected image preview">
+        </label>
+
+        <input type="file" id="imageUpload" accept="image/png,image/jpeg">
+
+        <textarea
+            id="videoPrompt"
+            rows="4"
+            placeholder="Describe how you want your image to move...">
+        </textarea>
+
+        <button id="generateBtn" type="button">
+            Generate Video
+        </button>
+
+    </div>
+
+    <script>
+        const imageUpload = document.getElementById("imageUpload");
+        const preview = document.getElementById("preview");
+
+        imageUpload.addEventListener("change", function () {
+            const file = this.files[0];
+
+            if (file) {
+                preview.src = URL.createObjectURL(file);
+                preview.style.display = "block";
+            }
+        });
+    </script>
+
+</body>
+</html>
+
