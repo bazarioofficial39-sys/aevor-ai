@@ -198,35 +198,88 @@
 
     </div>
 
-    <script>
-        const imageUpload = document.getElementById("imageUpload");
-        const preview = document.getElementById("preview");
+<script>
+    const imageUpload = document.getElementById("imageUpload");
+    const preview = document.getElementById("preview");
+    const generateBtn = document.getElementById("generateBtn");
 
-        let previousImageURL = null;
+    let previousImageURL = null;
+    let uploadedFilePath = null;
 
-        imageUpload.addEventListener("change", function () {
+    imageUpload.addEventListener("change", function () {
+        const file = this.files[0];
 
-            const file = this.files[0];
+        uploadedFilePath = null;
 
-            if (!file) return;
+        if (!file) return;
 
-            if (!["image/jpeg", "image/png"].includes(file.type)) {
-                alert("Please select a JPG or PNG image.");
-                this.value = "";
-                return;
+        if (!["image/jpeg", "image/png"].includes(file.type)) {
+            alert("Please select a JPG or PNG image.");
+            this.value = "";
+            return;
+        }
+
+        if (file.size > 10 * 1024 * 1024) {
+            alert("Image size must be less than 10 MB.");
+            this.value = "";
+            return;
+        }
+
+        if (previousImageURL) {
+            URL.revokeObjectURL(previousImageURL);
+        }
+
+        previousImageURL = URL.createObjectURL(file);
+
+        preview.src = previousImageURL;
+        preview.style.display = "block";
+    });
+
+    generateBtn.addEventListener("click", async function () {
+        const file = imageUpload.files[0];
+
+        if (!file) {
+            alert("Please select an image first.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("image", file);
+
+        generateBtn.disabled = true;
+        generateBtn.textContent = "Uploading Image...";
+
+        try {
+            const response = await fetch("/api/upload-image", {
+                method: "POST",
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.error || "Image upload failed.");
             }
 
-            if (previousImageURL) {
-                URL.revokeObjectURL(previousImageURL);
-            }
+            uploadedFilePath = result.filePath;
 
-            previousImageURL = URL.createObjectURL(file);
+            generateBtn.textContent = "Image Uploaded ✓";
 
-            preview.src = previousImageURL;
-            preview.style.display = "block";
+            alert("Image uploaded successfully! Next step: video generation.");
 
-        });
-    </script>
+            console.log("Uploaded file path:", uploadedFilePath);
+
+        } catch (error) {
+            console.error("Upload error:", error);
+
+            generateBtn.textContent = "Upload Failed";
+            alert(error.message);
+
+        } finally {
+            generateBtn.disabled = false;
+        }
+    });
+</script>
 
 </body>
 </html>
