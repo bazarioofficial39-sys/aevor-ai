@@ -9,7 +9,284 @@
 
     <meta name="description" content="Learn about AEVOR AI, its vision, features, and founder Syed Ali Adnan.">
 
-    <link rel="stylesheet" href="about.css">
+    <link rel="icon" href="logo.jpg">
+    <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #080808;
+    color: white;
+    font-family: Arial, sans-serif;
+    line-height: 1.7;
+}
+
+/* Navbar */
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 8%;
+    background: #111;
+    border-bottom: 1px solid #292929;
+}
+
+.logo {
+    color: white;
+    font-size: 26px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.logo span,
+footer span {
+    color: gold;
+}
+
+nav {
+    display: flex;
+    gap: 25px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+nav a:hover,
+nav a.active {
+    color: gold;
+}
+
+/* Hero */
+
+.hero {
+    min-height: 450px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 50px 8%;
+    background: linear-gradient(135deg, #111, #1c1708);
+}
+
+.hero-content {
+    max-width: 750px;
+}
+
+.tagline {
+    color: gold;
+    letter-spacing: 3px;
+    font-size: 13px;
+    margin-bottom: 12px;
+}
+
+.hero h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+.hero h1 span,
+.section-heading span {
+    color: gold;
+}
+
+.hero-content > p:not(.tagline) {
+    color: #ccc;
+    margin-bottom: 25px;
+}
+
+/* Buttons */
+
+.btn {
+    display: inline-block;
+    padding: 11px 25px;
+    background: gold;
+    color: black;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    background: white;
+    transform: translateY(-3px);
+}
+
+/* General Sections */
+
+.section {
+    padding: 75px 8%;
+    text-align: center;
+}
+
+.section-heading {
+    margin-bottom: 25px;
+}
+
+.section-heading h2 {
+    font-size: 35px;
+}
+
+.description {
+    max-width: 800px;
+    margin: auto;
+    color: #bbb;
+}
+
+/* Features */
+
+.feature-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-top: 35px;
+}
+
+.feature-card {
+    background: #151515;
+    border: 1px solid #333;
+    padding: 25px;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+.feature-card:hover {
+    border-color: gold;
+    transform: translateY(-7px);
+}
+
+.feature-card h3 {
+    color: gold;
+    margin-bottom: 12px;
+}
+
+.feature-card p {
+    color: #bbb;
+}
+
+/* Founder */
+
+.founder-card {
+    max-width: 850px;
+    margin: 35px auto 0;
+    padding: 30px;
+    background: #151515;
+    border: 1px solid #333;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 35px;
+    text-align: left;
+}
+
+.founder-image img {
+    width: 180px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid gold;
+}
+
+.founder-info {
+    flex: 1;
+}
+
+.founder-info h3 {
+    font-size: 27px;
+}
+
+.role {
+    color: gold;
+    margin-bottom: 12px;
+}
+
+.founder-info p:not(.role) {
+    color: #bbb;
+    margin-bottom: 20px;
+}
+
+/* Footer */
+
+footer {
+    background: #111;
+    border-top: 1px solid #292929;
+    padding: 35px 8%;
+    text-align: center;
+}
+
+footer h2 {
+    margin-bottom: 10px;
+}
+
+footer p {
+    color: #aaa;
+}
+
+.footer-links {
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+}
+
+.footer-links a {
+    color: white;
+    text-decoration: none;
+}
+
+.footer-links a:hover {
+    color: gold;
+}
+
+.copyright {
+    font-size: 13px;
+    margin-top: 20px;
+}
+
+/* Responsive Design */
+
+@media (max-width: 900px) {
+    .feature-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .navbar {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .hero h1 {
+        font-size: 35px;
+    }
+
+    .section-heading h2 {
+        font-size: 28px;
+    }
+
+    .feature-container {
+        grid-template-columns: 1fr;
+    }
+
+    .founder-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .founder-image img {
+        width: 150px;
+        height: 150px;
+    }
+}
+</style>
 </head>
 
 <body>
@@ -18,9 +295,14 @@
     <header class="navbar">
         <a href="index.html" class="logo">AEVOR <span>AI</span></a>
 
-        <nav>
-            <a href="index.html">Home</a>
-            <a href="about.html" class="active">About</a>
+        <nav><nav>
+    <a href="/">Home</a>
+    <a href="/about.html" class="active">About</a>
+    <a href="/about.html#mission">Our Mission</a>
+    <a href="/about.html#features">Features</a>
+    <a href="/about.html#founder">Founder</a>
+    <a href="/about.html#vision">Our Vision</a>
+</nav>
         </nav>
     </header>
 
@@ -43,6 +325,10 @@
 
     <!-- About Section -->
     <section class="about section">
+        <section class="mission section" id="mission">
+<section class="features section" id="features">
+<section class="founder section" id="founder">
+<section class="vision section" id="vision">
         <div class="section-heading">
             <p class="tagline">WHO WE ARE</p>
             <h2>About <span>AEVOR AI</span></h2>
@@ -138,7 +424,7 @@
                     useful digital technology.
                 </p>
 
-                <a href="YOUR-LINKEDIN-URL"
+                <a href="https://www.linkedin.com/in/aevor-ai/"
                    target="_blank"
                    rel="noopener noreferrer"
                    class="btn">
