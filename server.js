@@ -25,7 +25,7 @@ const upload = multer({
 });
 
 app.use(express.json({ limit: '1mb' })); 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(__dirname)); 
 const apiKey = process.env.GROQ_API_KEY;
 const model = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
 const ai = apiKey ? new Groq({ apiKey }) : null;
